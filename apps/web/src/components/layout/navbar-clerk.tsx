@@ -33,6 +33,7 @@ export function ClerkNavbarAuth({ variant }: { variant: "links" | "auth" }) {
     const pathname = usePathname();
     const { user } = useUser();
     const isAdmin = user?.publicMetadata?.role === "admin";
+    const isManager = user?.publicMetadata?.role === "manager";
 
     if (variant === "auth") {
         return (
@@ -88,7 +89,7 @@ export function ClerkNavbarAuth({ variant }: { variant: "links" | "auth" }) {
                         {link.label}
                     </Link>
                 ))}
-                {isAdmin && (
+                {(isAdmin || isManager) && (
                     <Link
                         href="/dashboard/admin"
                         className={cn(

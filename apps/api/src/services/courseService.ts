@@ -215,30 +215,78 @@ export async function getDashboardStats() {
             ? await ReviewModel.find().lean()
             : readJsonFile<Review[]>(REVIEWS_FILE, []);
 
+    const enrollments =
+        getStorageMode() === "mongo"
+            ? await EnrollmentModel.find().lean()
+            : readJsonFile<
+                  {
+                      courseId: string;
+                      userId: string;
+                      enrolledAt: string;
+                  }[]
+              >(ENROLLMENTS_FILE, []);
+
     const categoryCounts: Record<string, number> = {};
     courses.forEach((c) => {
         categoryCounts[c.category] = (categoryCounts[c.category] || 0) + 1;
     });
 
-    const monthlyEnrollments = [
-        { month: "Jan", count: 142 },
-        { month: "Feb", count: 198 },
-        { month: "Mar", count: 256 },
-        { month: "Apr", count: 312 },
-        { month: "May", count: 389 },
-        { month: "Jun", count: 445 },
-    ];
+    const uniqueStudentIds = new Set(
+        enrollments.map((enrollment) => String(enrollment.userId)),
+    );
+
+    const countsByMonth = enrollments.reduce(
+        (acc: Record<string, number>, enrollment) => {
+            const date = new Date(enrollment.enrolledAt);
+            if (Number.isNaN(date.getTime())) return acc;
+            const key = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}`;
+            acc[key] = (acc[key] || 0) + 1;
+            return acc;
+        },
+        {},
+    );
+
+    const now = new Date();
+    const monthlyEnrollments = Array.from({ length: 12 }).map((_, index) => {
+        const date = new Date(
+            now.getFullYear(),
+            now.getMonth() - (11 - index),
+            1,
+        );
+        const key = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}`;
+        return {
+            month: date.toLocaleString("default", { month: "short" }),
+            count: countsByMonth[key] || 0,
+        };
+    });
+
+    const courseTitleById = Object.fromEntries(
+        courses.map((course) => [course.id, course.title]),
+    );
+
+    const recentActivity = enrollments
+        .map((enrollment) => ({
+            user: String(enrollment.userId),
+            course: courseTitleById[enrollment.courseId] || "Unknown course",
+            date: new Date(enrollment.enrolledAt).toISOString(),
+            event: "New enrollment",
+        }))
+        .filter((item) => !Number.isNaN(new Date(item.date).getTime()))
+        .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+        .slice(0, 5);
 
     return {
         totalCourses: courses.length,
         totalReviews: reviews.length,
         avgRating:
             courses.reduce((s, c) => s + c.rating, 0) / courses.length || 0,
-        totalStudents: 2847,
+        totalStudents: uniqueStudentIds.size,
         categoryCounts,
         monthlyEnrollments,
         topCourses: courses
+            .slice()
             .sort((a, b) => b.reviewCount - a.reviewCount)
             .slice(0, 5),
+        recentActivity,
     };
 }

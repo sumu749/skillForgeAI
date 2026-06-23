@@ -28,7 +28,7 @@ function ClerkProfile() {
             <div>
                 <p className="text-sm text-muted-foreground">Role</p>
                 <p className="font-medium capitalize">
-                    {(user?.publicMetadata?.role as string) || "student"}
+                    {(user?.publicMetadata?.role as string) || "user"}
                 </p>
             </div>
             <div>
