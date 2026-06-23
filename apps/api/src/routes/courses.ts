@@ -7,6 +7,7 @@ import {
     queryCourses,
     getDashboardStats,
     enrollInCourse,
+    getEnrolledCourses,
     isUserEnrolled,
 } from "../services/courseService";
 import { requireClerkAuth } from "../middleware/auth";
@@ -36,6 +37,26 @@ router.get("/stats", async (_req: Request, res: Response) => {
     }
 });
 
+router.get(
+    "/enrolled",
+    requireClerkAuth(),
+    async (req: Request, res: Response) => {
+        try {
+            const userId = (req as Request & { auth?: { userId?: string } })
+                .auth?.userId;
+            if (!userId) {
+                res.status(401).json({ error: "Authentication required" });
+                return;
+            }
+
+            const courses = await getEnrolledCourses(userId);
+            res.json({ data: courses });
+        } catch (error) {
+            res.status(500).json({ error: (error as Error).message });
+        }
+    },
+);
+
 router.get("/:slug", async (req: Request, res: Response) => {
     try {
         const course = await getCourseBySlug(String(req.params.slug));
@@ -43,11 +64,18 @@ router.get("/:slug", async (req: Request, res: Response) => {
             res.status(404).json({ error: "Course not found" });
             return;
         }
+
+        const userId = (req as Request & { auth?: { userId?: string } }).auth
+            ?.userId;
+        const enrolled = userId
+            ? await isUserEnrolled(course.id, userId)
+            : false;
+
         const [reviews, related] = await Promise.all([
             getReviewsByCourseId(course.id),
             getRelatedCourses(course),
         ]);
-        res.json({ course, reviews, related });
+        res.json({ course, reviews, related, enrolled });
     } catch (error) {
         res.status(500).json({ error: (error as Error).message });
     }

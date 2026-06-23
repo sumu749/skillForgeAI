@@ -82,6 +82,30 @@ export async function getCourseById(id: string): Promise<Course | null> {
     return courses.find((c) => c.id === id) || null;
 }
 
+export async function getEnrolledCourses(userId: string): Promise<Course[]> {
+    const enrollments =
+        getStorageMode() === "mongo"
+            ? await EnrollmentModel.find({ userId }).lean()
+            : readJsonFile<
+                  {
+                      courseId: string;
+                      userId: string;
+                      enrolledAt: string;
+                  }[]
+              >(ENROLLMENTS_FILE, []);
+
+    const courseIds = new Set(
+        enrollments.map((enrollment) =>
+            getStorageMode() === "mongo"
+                ? String((enrollment as Record<string, unknown>).courseId)
+                : enrollment.courseId,
+        ),
+    );
+
+    const courses = await getAllCourses();
+    return courses.filter((course) => courseIds.has(course.id));
+}
+
 export async function getRelatedCourses(
     course: Course,
     limit = 4,

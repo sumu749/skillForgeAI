@@ -1,6 +1,6 @@
 "use client";
 
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import Image from "next/image";
@@ -24,6 +24,8 @@ export default function CourseDetailPage() {
     const [message, setMessage] = useState<string | null>(null);
     const queryClient = useQueryClient();
 
+    const router = useRouter();
+
     const { data, isLoading } = useQuery({
         queryKey: ["course", slug],
         queryFn: async () => {
@@ -32,6 +34,7 @@ export default function CourseDetailPage() {
                 course: Course;
                 reviews: Review[];
                 related: Course[];
+                enrolled: boolean;
             };
         },
     });
@@ -44,7 +47,7 @@ export default function CourseDetailPage() {
                 throw new Error("Please sign in to enroll.");
             }
 
-            const token = await getToken({ template: "single-factor" });
+            const token = await getToken();
             const res = await api.post(
                 `/courses/${slug}/enroll`,
                 {},
@@ -58,7 +61,19 @@ export default function CourseDetailPage() {
         },
         onSuccess: (data) => {
             setMessage(data.message || "Enrolled successfully!");
-            queryClient.invalidateQueries(["course", slug]);
+            queryClient.setQueryData(["course", slug], (oldData) =>
+                oldData
+                    ? {
+                          ...(oldData as {
+                              course: Course;
+                              reviews: Review[];
+                              related: Course[];
+                              enrolled: boolean;
+                          }),
+                          enrolled: true,
+                      }
+                    : oldData,
+            );
         },
         onError: (error: unknown) => {
             const fallback =
@@ -91,7 +106,7 @@ export default function CourseDetailPage() {
         );
     }
 
-    const { course, reviews, related } = data;
+    const { course, reviews, related, enrolled } = data;
 
     return (
         <div className="container py-10">
@@ -238,17 +253,30 @@ export default function CourseDetailPage() {
                             className="w-full mb-2"
                             onClick={() => {
                                 setMessage(null);
+                                if (!isSignedIn) {
+                                    router.push(
+                                        `/sign-in?redirect_url=/courses/${slug}`,
+                                    );
+                                    return;
+                                }
                                 enrollMutation.mutate();
                             }}
-                            disabled={enrollMutation.isLoading}
+                            disabled={enrollMutation.isLoading || enrolled}
                         >
                             {enrollMutation.isLoading
                                 ? "Enrolling..."
-                                : "Enroll Now"}
+                                : enrolled
+                                  ? "Already Enrolled"
+                                  : "Enroll Now"}
                         </Button>
                         {message ? (
                             <p className="text-sm text-center text-secondary">
                                 {message}
+                            </p>
+                        ) : null}
+                        {enrolled ? (
+                            <p className="text-sm text-center text-muted-foreground">
+                                You are enrolled in this course.
                             </p>
                         ) : null}
                         <p className="text-xs text-muted-foreground text-center">
