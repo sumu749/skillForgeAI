@@ -1,20 +1,20 @@
 {
-  "name": "skillforge-ai",
-  "version": "1.0.0",
-  "private": true,
-  "workspaces": [
-    "apps/*",
-    "packages/*"
-  ],
-  "scripts": {
-    "dev": "concurrently \"npm run dev -w @skillforge/api\" \"npm run dev -w @skillforge/web\"",
-    "dev:web": "npm run dev -w @skillforge/web",
-    "dev:api": "npm run dev -w @skillforge/api",
-    "build": "npm run build -w @skillforge/shared && npm run build -w @skillforge/api && npm run build -w @skillforge/web",
-    "lint": "npm run lint -w @skillforge/web"
-  },
-  "devDependencies": {
-    "concurrently": "^9.1.2",
-    "typescript": "^5.7.3"
-  }
+    "name": "skillforge-ai",
+    "version": "1.0.0",
+    "private": true,
+    "workspaces": [
+        "apps/*",
+        "packages/*"
+    ],
+    "scripts": {
+        "dev": "node ./scripts/dev.js",
+        "dev:web": "npm run dev -w @skillforge/web",
+        "dev:api": "npm run dev -w @skillforge/api",
+        "build": "npm run build -w @skillforge/shared && npm run build -w @skillforge/api && npm run build -w @skillforge/web",
+        "lint": "npm run lint -w @skillforge/web"
+    },
+    "devDependencies": {
+        "concurrently": "^9.1.2",
+        "typescript": "^5.7.3"
+    }
 }
