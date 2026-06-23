@@ -80,6 +80,23 @@ export function Navbar() {
                   self.findIndex((item) => item.href === link.href) === index,
           );
 
+    const activeLinkHref = links
+        ? links.reduce<string | null>((current, link) => {
+              const match =
+                  pathname === link.href ||
+                  pathname.startsWith(link.href + "/");
+              if (!match) {
+                  return current;
+              }
+
+              if (!current || link.href.length > current.length) {
+                  return link.href;
+              }
+
+              return current;
+          }, null)
+        : null;
+
     useEffect(() => {
         if (!menuOpen) {
             return;
@@ -202,23 +219,24 @@ export function Navbar() {
 
                             {links
                                 ?.filter((link) => link.label !== "Explore")
-                                .map((link) => (
-                                    <Link
-                                        key={link.href}
-                                        href={link.href}
-                                        className={cn(
-                                            "text-sm font-medium transition-colors hover:text-primary",
-                                            pathname === link.href ||
-                                                pathname.startsWith(
-                                                    link.href + "/",
-                                                )
-                                                ? "text-primary"
-                                                : "text-muted-foreground",
-                                        )}
-                                    >
-                                        {link.label}
-                                    </Link>
-                                ))}
+                                .map((link) => {
+                                    const isActive =
+                                        activeLinkHref === link.href;
+                                    return (
+                                        <Link
+                                            key={link.href}
+                                            href={link.href}
+                                            className={cn(
+                                                "text-sm font-medium transition-colors hover:text-primary",
+                                                isActive
+                                                    ? "text-primary"
+                                                    : "text-muted-foreground",
+                                            )}
+                                        >
+                                            {link.label}
+                                        </Link>
+                                    );
+                                })}
                         </>
                     )}
                 </nav>
@@ -257,16 +275,48 @@ export function Navbar() {
             {mobileOpen && (
                 <div className="border-t md:hidden">
                     <nav className="container flex flex-col gap-2 py-4">
-                        {(links || publicLinks).map((link) => (
-                            <Link
-                                key={link.href}
-                                href={link.href}
-                                onClick={() => setMobileOpen(false)}
-                                className="px-2 py-2 text-sm font-medium hover:text-primary"
-                            >
-                                {link.label}
-                            </Link>
-                        ))}
+                        {(() => {
+                            const mobileLinks = links || publicLinks;
+                            const activeMobileLinkHref = mobileLinks.reduce<
+                                string | null
+                            >((current, link) => {
+                                const match =
+                                    pathname === link.href ||
+                                    pathname.startsWith(link.href + "/");
+                                if (!match) {
+                                    return current;
+                                }
+
+                                if (
+                                    !current ||
+                                    link.href.length > current.length
+                                ) {
+                                    return link.href;
+                                }
+
+                                return current;
+                            }, null);
+
+                            return mobileLinks.map((link) => {
+                                const isActive =
+                                    activeMobileLinkHref === link.href;
+                                return (
+                                    <Link
+                                        key={link.href}
+                                        href={link.href}
+                                        onClick={() => setMobileOpen(false)}
+                                        className={cn(
+                                            "px-2 py-2 text-sm font-medium rounded-xl transition-colors",
+                                            isActive
+                                                ? "bg-primary text-primary-foreground"
+                                                : "text-muted-foreground hover:text-primary hover:bg-muted",
+                                        )}
+                                    >
+                                        {link.label}
+                                    </Link>
+                                );
+                            });
+                        })()}
                     </nav>
                 </div>
             )}

@@ -35,11 +35,33 @@ export function ClerkNavbarAuth({ variant }: { variant: "links" | "auth" }) {
     const isAdmin = user?.publicMetadata?.role === "admin";
     const isManager = user?.publicMetadata?.role === "manager";
 
+    const signedInLinks =
+        isAdmin || isManager
+            ? [...authLinks, { href: "/dashboard/admin", label: "Admin" }]
+            : authLinks;
+
+    const activeLinkHref = signedInLinks.reduce<string | null>(
+        (current, link) => {
+            const match =
+                pathname === link.href || pathname.startsWith(link.href + "/");
+            if (!match) {
+                return current;
+            }
+
+            if (!current || link.href.length > current.length) {
+                return link.href;
+            }
+
+            return current;
+        },
+        null,
+    );
+
     if (variant === "auth") {
         return (
             <>
                 <SignedOut>
-                    <SignInButton mode="modal">
+                    <SignInButton mode="modal" redirectUrl="/dashboard">
                         <Button size="sm">Sign In</Button>
                     </SignInButton>
                     <Link href="/sign-up" className="hidden sm:block">
@@ -58,50 +80,46 @@ export function ClerkNavbarAuth({ variant }: { variant: "links" | "auth" }) {
     return (
         <>
             <SignedOut>
-                {publicLinks.map((link) => (
-                    <Link
-                        key={link.href}
-                        href={link.href}
-                        className={cn(
-                            "text-sm font-medium transition-colors hover:text-primary",
-                            pathname === link.href
-                                ? "text-primary"
-                                : "text-muted-foreground",
-                        )}
-                    >
-                        {link.label}
-                    </Link>
-                ))}
+                {publicLinks.map((link) => {
+                    const isActive =
+                        link.href === "/"
+                            ? pathname === "/"
+                            : pathname === link.href ||
+                              pathname.startsWith(link.href + "/");
+                    return (
+                        <Link
+                            key={link.href}
+                            href={link.href}
+                            className={cn(
+                                "text-sm font-medium transition-colors hover:text-primary",
+                                isActive
+                                    ? "text-primary"
+                                    : "text-muted-foreground",
+                            )}
+                        >
+                            {link.label}
+                        </Link>
+                    );
+                })}
             </SignedOut>
             <SignedIn>
-                {authLinks.map((link) => (
-                    <Link
-                        key={link.href}
-                        href={link.href}
-                        className={cn(
-                            "text-sm font-medium transition-colors hover:text-primary",
-                            pathname.startsWith(link.href) &&
-                                link.href !== "/explore"
-                                ? "text-primary"
-                                : "text-muted-foreground",
-                        )}
-                    >
-                        {link.label}
-                    </Link>
-                ))}
-                {(isAdmin || isManager) && (
-                    <Link
-                        href="/dashboard/admin"
-                        className={cn(
-                            "text-sm font-medium transition-colors hover:text-primary",
-                            pathname.startsWith("/dashboard/admin")
-                                ? "text-primary"
-                                : "text-muted-foreground",
-                        )}
-                    >
-                        Admin
-                    </Link>
-                )}
+                {signedInLinks.map((link) => {
+                    const isActive = activeLinkHref === link.href;
+                    return (
+                        <Link
+                            key={link.href}
+                            href={link.href}
+                            className={cn(
+                                "text-sm font-medium transition-colors hover:text-primary",
+                                isActive
+                                    ? "text-primary"
+                                    : "text-muted-foreground",
+                            )}
+                        >
+                            {link.label}
+                        </Link>
+                    );
+                })}
             </SignedIn>
         </>
     );
