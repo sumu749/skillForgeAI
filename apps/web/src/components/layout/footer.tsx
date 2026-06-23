@@ -61,7 +61,7 @@ export function Footer() {
                         </p>
                         <div className="mt-4 flex items-center gap-4">
                             <Link
-                                href="https://twitter.com/skillforgeai"
+                                href="https://twitter.com/sumaiyaalam749"
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 aria-label="SkillForge AI on Twitter"

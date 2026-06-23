@@ -1,6 +1,11 @@
 import axios from "axios";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000";
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "";
+const browserApiBaseUrl =
+    typeof window !== "undefined"
+        ? `${window.location.protocol}//${window.location.host}`
+        : "";
+const BASE_URL = API_URL || browserApiBaseUrl || "http://localhost:4000";
 
 function normalizeError(error: unknown) {
     if (error instanceof Error) return error.message;
@@ -16,8 +21,9 @@ function normalizeError(error: unknown) {
 }
 
 export const api = axios.create({
-    baseURL: `${API_URL}/api`,
+    baseURL: `${BASE_URL}/api`,
     headers: { "Content-Type": "application/json" },
+    withCredentials: true,
 });
 
 export async function streamChat(
