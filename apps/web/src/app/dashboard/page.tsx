@@ -20,8 +20,10 @@ import { BookOpen, Users, Star, TrendingUp, Sparkles } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useUser } from "@clerk/nextjs";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import { api } from "@/lib/api";
 import { CATEGORY_LABELS } from "@skillforge/shared";
+import Link from "next/link";
 
 const COLORS = [
     "#6366F1",
@@ -43,7 +45,7 @@ export default function DashboardPage() {
         },
     });
 
-    const role = user?.publicMetadata?.role || "student";
+    const role = (user?.publicMetadata?.role as string) || "student";
     const greeting = user?.fullName
         ? `Welcome back, ${user.fullName}`
         : "Welcome back";
@@ -89,6 +91,31 @@ export default function DashboardPage() {
                     </div>
                 </div>
             </div>
+
+            {/* AI Features Highlight */}
+            <Link href="/dashboard/ai-features">
+                <Card className="bg-gradient-to-br from-primary/10 to-primary/5 border-primary/30 hover:border-primary/50 cursor-pointer transition-all hover:shadow-lg">
+                    <CardContent className="p-6 flex items-center justify-between">
+                        <div className="flex items-center gap-4">
+                            <div className="h-12 w-12 rounded-xl bg-primary/20 flex items-center justify-center">
+                                <Sparkles className="h-6 w-6 text-primary" />
+                            </div>
+                            <div>
+                                <p className="font-semibold text-foreground">
+                                    Explore AI Features
+                                </p>
+                                <p className="text-sm text-muted-foreground">
+                                    Generate content, get recommendations &
+                                    learning insights
+                                </p>
+                            </div>
+                        </div>
+                        <Button variant="ghost" size="sm" className="ml-4">
+                            Explore →
+                        </Button>
+                    </CardContent>
+                </Card>
+            </Link>
 
             <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
                 {[

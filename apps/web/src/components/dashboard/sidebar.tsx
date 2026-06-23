@@ -17,6 +17,7 @@ import { cn } from "@/lib/utils";
 const userLinks = [
     { href: "/dashboard", label: "Overview", icon: LayoutDashboard },
     { href: "/dashboard/chat", label: "AI Tutor", icon: Sparkles },
+    { href: "/dashboard/ai-features", label: "AI Features", icon: Sparkles },
     { href: "/dashboard/courses", label: "My Courses", icon: BookOpen },
     { href: "/dashboard/profile", label: "Profile", icon: User },
 ];

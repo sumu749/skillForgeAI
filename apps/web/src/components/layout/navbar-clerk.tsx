@@ -61,7 +61,7 @@ export function ClerkNavbarAuth({ variant }: { variant: "links" | "auth" }) {
         return (
             <>
                 <SignedOut>
-                    <SignInButton mode="modal" redirectUrl="/dashboard">
+                    <SignInButton mode="modal" fallbackRedirectUrl="/dashboard">
                         <Button size="sm">Sign In</Button>
                     </SignInButton>
                     <Link href="/sign-up" className="hidden sm:block">

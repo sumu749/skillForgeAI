@@ -261,9 +261,9 @@ export default function CourseDetailPage() {
                                 }
                                 enrollMutation.mutate();
                             }}
-                            disabled={enrollMutation.isLoading || enrolled}
+                            disabled={enrollMutation.isPending || enrolled}
                         >
-                            {enrollMutation.isLoading
+                            {enrollMutation.isPending
                                 ? "Enrolling..."
                                 : enrolled
                                   ? "Already Enrolled"

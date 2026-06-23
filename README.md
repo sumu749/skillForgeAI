@@ -41,6 +41,7 @@ Admins and managers have access to a dedicated platform dashboard with course, r
 SkillForge AI exposes an intelligent chat tutor experience that helps users with learning support, course recommendations, and study guidance.
 
 - AI Tutor chat is powered by OpenAI via the backend API.
+- AI course recommendations are delivered through the tutor experience and dashboard context.
 - The backend reads `OPENAI_API_KEY` and `OPENAI_MODEL` from environment variables.
 - The chat feature is available through the dashboard UI when users are signed in.
 
