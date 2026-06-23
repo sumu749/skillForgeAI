@@ -11,6 +11,7 @@
         "dev:web": "npm run dev -w @skillforge/web",
         "dev:api": "npm run dev -w @skillforge/api",
         "build": "npm run build -w @skillforge/shared && npm run build -w @skillforge/api && npm run build -w @skillforge/web",
+        "vercel-build": "npm run build -w @skillforge/shared && npm run build -w @skillforge/web",
         "lint": "npm run lint -w @skillforge/web"
     },
     "devDependencies": {

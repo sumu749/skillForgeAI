@@ -69,17 +69,23 @@ cp apps/web/.env.example apps/web/.env.local
 Update the following values in the copied files:
 
 - `apps/api/.env`
+    - `PORT` (default: `4000`)
+    - `NODE_ENV` (default: `development`)
+    - `MONGODB_URI` (optional)
     - `OPENAI_API_KEY`
     - `OPENAI_MODEL`
     - `CLERK_PUBLISHABLE_KEY`
     - `CLERK_SECRET_KEY`
-    - `MONGODB_URI` (optional)
+    - `WEB_URL` (frontend origin, default: `http://localhost:3000`)
 
 - `apps/web/.env.local`
+    - `NEXT_PUBLIC_API_URL` (default: `http://localhost:4000`)
     - `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY`
     - `CLERK_SECRET_KEY`
-
-If MongoDB is not available, the backend can run with JSON fallback storage instead.
+    - `NEXT_PUBLIC_CLERK_SIGN_IN_URL` (default: `/sign-in`)
+    - `NEXT_PUBLIC_CLERK_SIGN_UP_URL` (default: `/sign-up`)
+    - `NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL` (default: `/dashboard`)
+    - `NEXT_PUBLIC_CLERK_AFTER_SIGN_UP_URL` (default: `/dashboard`)
 
 ### 4. Run development servers
 
@@ -88,6 +94,8 @@ Start both apps from the workspace root:
 ```bash
 npm run dev
 ```
+
+The root `npm run dev` command uses `scripts/dev.js` to find available ports automatically and sets `NEXT_PUBLIC_API_URL` for the web app.
 
 Or run them individually:
 
@@ -108,8 +116,6 @@ npm run seed -w @skillforge/api
 ```
 
 ## Demo Credentials
-
-The app includes a built-in developer demo flow for sign-in.
 
 - Email: `demo@skillforge.ai`
 - Password: `DemoPass123!`
