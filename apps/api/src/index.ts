@@ -41,6 +41,14 @@ async function bootstrap() {
     app.use(apiRateLimiter);
     app.use(optionalAuth());
 
+    app.get("/", (_req, res) => {
+        res.json({
+            success: true,
+            message: "SkillForge API is running 🚀",
+            docs: "/api/health",
+        });
+    });
+
     app.get("/api/health", (_req, res) => {
         res.json({
             status: "ok",
