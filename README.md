@@ -1,8 +1,10 @@
 # SkillForge AI
 
-SkillForge AI is a local development learning platform built with a split frontend/backend architecture. It combines course browsing, dashboard analytics, role-based admin pages, and an AI tutor chat assistant.
+[![Live Demo](https://img.shields.io/badge/demo-live-brightgreen)](https://skill-forge-ai-api.vercel.app/)
 
-> Note: This repository is built for local development only. There is no live deployment on Vercel, Render, or other public hosting.
+SkillForge AI is a learning platform with a split frontend/backend architecture: course browsing, dashboard analytics, role-based admin pages, and an AI tutor chat assistant.
+
+Live demo: <https://skill-forge-ai-api.vercel.app/>
 
 ## Project Overview
 
@@ -13,7 +15,7 @@ SkillForge AI includes:
 - `packages/shared/` — Shared TypeScript definitions and Zod validation schemas used by both apps.
 
 Users can browse courses, review details, chat with an AI tutor, and manage their profile.
-Admins and managers have access to a dedicated platform dashboard with course, review, user, analytics, and settings sections.
+Admins and managers have access to a dedicated dashboard with course, review, user, analytics, and settings sections.
 
 ## Tech Stack
 
@@ -45,6 +47,8 @@ SkillForge AI exposes an intelligent chat tutor experience that helps users with
 - The backend reads `OPENAI_API_KEY` and `OPENAI_MODEL` from environment variables.
 - The chat feature is available through the dashboard UI when users are signed in.
 
+Note: This repository is deployed publicly at the Live demo link above. Do NOT commit API keys or secret values to the repository. If you find secrets in the repository, rotate them immediately.
+
 ## Setup Instructions
 
 ### 1. Install dependencies
@@ -57,11 +61,31 @@ npm install
 
 ### 2. Create local environment files
 
-Copy the example env files for both apps:
+This repo does not include committed example env files. Create local env files for each app from the template below.
 
-```bash
-cp apps/api/.env.example apps/api/.env
-cp apps/web/.env.example apps/web/.env.local
+Create `apps/api/.env` (example):
+
+```
+PORT=4000
+NODE_ENV=development
+MONGODB_URI=
+OPENAI_API_KEY=
+OPENAI_MODEL=gpt-4o-mini
+CLERK_PUBLISHABLE_KEY=
+CLERK_SECRET_KEY=
+WEB_URL=http://localhost:3000
+```
+
+Create `apps/web/.env.local` (example):
+
+```
+NEXT_PUBLIC_API_URL=http://localhost:4000
+NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=
+CLERK_SECRET_KEY=
+NEXT_PUBLIC_CLERK_SIGN_IN_URL=/sign-in
+NEXT_PUBLIC_CLERK_SIGN_UP_URL=/sign-up
+NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL=/dashboard
+NEXT_PUBLIC_CLERK_AFTER_SIGN_UP_URL=/dashboard
 ```
 
 ### 3. Configure environment variables
@@ -72,10 +96,10 @@ Update the following values in the copied files:
     - `PORT` (default: `4000`)
     - `NODE_ENV` (default: `development`)
     - `MONGODB_URI` (optional)
-    - `OPENAI_API_KEY`
-    - `OPENAI_MODEL`
-    - `CLERK_PUBLISHABLE_KEY`
-    - `CLERK_SECRET_KEY`
+    - `OPENAI_API_KEY` (required for AI features)
+    - `OPENAI_MODEL` (recommended: `gpt-4o-mini`)
+    - `CLERK_PUBLISHABLE_KEY` (Clerk)
+    - `CLERK_SECRET_KEY` (Clerk)
     - `WEB_URL` (frontend origin, default: `http://localhost:3000`)
 
 - `apps/web/.env.local`
@@ -86,6 +110,8 @@ Update the following values in the copied files:
     - `NEXT_PUBLIC_CLERK_SIGN_UP_URL` (default: `/sign-up`)
     - `NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL` (default: `/dashboard`)
     - `NEXT_PUBLIC_CLERK_AFTER_SIGN_UP_URL` (default: `/dashboard`)
+
+Security: Keep these files out of version control. Add `apps/api/.env` and `apps/web/.env.local` to `.gitignore` if not already ignored.
 
 ### 4. Run development servers
 
@@ -115,6 +141,32 @@ If you want to populate the API with sample courses and reviews, run:
 npm run seed -w @skillforge/api
 ```
 
+## API Endpoints
+
+Base API: `http://localhost:4000` (or the `NEXT_PUBLIC_API_URL` you configure)
+
+- AI endpoints (prefixed with `/ai`):
+    - `POST /ai/chat` — server-sent-events chat stream (authenticated)
+    - `GET /ai/chat/:conversationId` — fetch conversation history
+    - `POST /ai/generate-content` — generate course content (topic/level/category)
+    - `POST /ai/recommendations` — generate course recommendations (authenticated)
+    - `GET /ai/learning-insights` — generate learning insights for the current user (authenticated)
+
+- Course endpoints (prefixed with `/courses`):
+    - `GET /courses` — query and list courses
+    - `GET /courses/stats` — dashboard stats
+    - `GET /courses/enrolled` — enrolled courses (authenticated)
+    - `GET /courses/:slug` — course details, reviews, related
+    - `POST /courses/:slug/enroll` — enroll in course (authenticated)
+
+Example curl (generate content):
+
+```bash
+curl -X POST http://localhost:4000/ai/generate-content \
+    -H "Content-Type: application/json" \
+    -d '{"topic":"React hooks","level":"beginner","category":"frontend"}'
+```
+
 ## Demo Credentials
 
 - Email: `demo@skillforge.ai`
@@ -139,6 +191,29 @@ npm run build
 npm run lint -w @skillforge/web
 npm run seed -w @skillforge/api
 ```
+
+## Deployment (Vercel)
+
+The project is deployed at the Live demo link above. To deploy yourself:
+
+1. Connect the repository to Vercel (or Git provider).
+2. In the Vercel project settings, set the required environment variables for the API and the web app (`OPENAI_API_KEY`, Clerk keys, etc.).
+3. For monorepos you can create two Vercel projects: one for `apps/web` (Next.js) and one for `apps/api` (Node/Serverless). Set the project root accordingly.
+
+If you prefer a single project, ensure the build command runs the workspace build and the correct output is served.
+
+## Contributing
+
+Contributions welcome — open an issue or PR. Please:
+
+- Avoid committing secrets.
+- Add minimal, focused PRs with a clear description and testing steps.
+
+## License & Contact
+
+This project does not currently include a license file. Add a `LICENSE` file if you intend to open-source it.
+
+For questions or to report a problem, open an issue or contact the maintainers.
 
 ## Directory Layout
 
