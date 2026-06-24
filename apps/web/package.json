@@ -6,7 +6,7 @@
         "dev": "next dev",
         "build": "next build",
         "prevercel-build": "npm run build -w @skillforge/shared",
-        "vercel-build": "next build",
+        "vercel-build": "npm run build -w @skillforge/shared && next build",
         "start": "next start",
         "lint": "next lint"
     },

@@ -10,26 +10,38 @@ import "./globals.css";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "SkillForge AI — Learn Smarter with AI",
-  description: "AI-powered online learning platform with expert courses and an intelligent tutor.",
+    title: "SkillForge AI — Learn Smarter with AI",
+    description:
+        "AI-powered online learning platform with expert courses and an intelligent tutor.",
+    icons: {
+        icon: "/favicon.ico",
+    },
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
-  return (
-    <html lang="en" suppressHydrationWarning>
-      <body className={inter.className}>
-        <AppProviders>
-          <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-            <QueryProvider>
-              <div className="flex min-h-screen flex-col">
-                <Navbar />
-                <main className="flex-1">{children}</main>
-                <Footer />
-              </div>
-            </QueryProvider>
-          </ThemeProvider>
-        </AppProviders>
-      </body>
-    </html>
-  );
+export default function RootLayout({
+    children,
+}: {
+    children: React.ReactNode;
+}) {
+    return (
+        <html lang="en" suppressHydrationWarning>
+            <body className={inter.className}>
+                <AppProviders>
+                    <ThemeProvider
+                        attribute="class"
+                        defaultTheme="system"
+                        enableSystem
+                    >
+                        <QueryProvider>
+                            <div className="flex min-h-screen flex-col">
+                                <Navbar />
+                                <main className="flex-1">{children}</main>
+                                <Footer />
+                            </div>
+                        </QueryProvider>
+                    </ThemeProvider>
+                </AppProviders>
+            </body>
+        </html>
+    );
 }
