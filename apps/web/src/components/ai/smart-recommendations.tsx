@@ -1,12 +1,13 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { Loader2, Lightbulb, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { api } from "@/lib/api";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
+import { useAuth } from "@clerk/nextjs";
 
 interface CourseRecommendation {
     courseId?: string;
@@ -30,13 +31,25 @@ export function SmartRecommendations({
     >([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState("");
+    const { getToken, isLoaded, isSignedIn } = useAuth();
 
-    const fetchRecommendations = async () => {
+    const fetchRecommendations = useCallback(async () => {
         setIsLoading(true);
         setError("");
 
         try {
-            const response = await api.post("/ai/recommendations");
+            const token = await getToken();
+
+            const response = await api.post(
+                "/ai/recommendations",
+                {},
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                },
+            );
+
             setRecommendations(response.data.recommendations);
             onRecommendationsLoaded?.(response.data.recommendations);
         } catch (err) {
@@ -72,12 +85,12 @@ export function SmartRecommendations({
         } finally {
             setIsLoading(false);
         }
-    };
+    }, [getToken, onRecommendationsLoaded]);
 
     useEffect(() => {
+        if (!isLoaded || !isSignedIn) return;
         fetchRecommendations();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    }, [isLoaded, isSignedIn, fetchRecommendations]);
 
     if (isLoading) {
         return (

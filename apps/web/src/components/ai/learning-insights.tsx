@@ -1,11 +1,12 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { Loader2, Brain, TrendingUp, CheckCircle2 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { api } from "@/lib/api";
 import { cn } from "@/lib/utils";
+import { useAuth } from "@clerk/nextjs";
 
 interface LearningInsight {
     progressSummary: string;
@@ -27,13 +28,19 @@ export function LearningInsights({
     const [insights, setInsights] = useState<LearningInsight | null>(null);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState("");
+    const { getToken, isLoaded, isSignedIn } = useAuth();
 
-    const fetchInsights = async () => {
+    const fetchInsights = useCallback(async () => {
         setIsLoading(true);
         setError("");
 
         try {
-            const response = await api.get("/ai/learning-insights");
+            const token = await getToken();
+            const response = await api.get("/ai/learning-insights", {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
             setInsights(response.data);
             onInsightsLoaded?.(response.data);
         } catch (err) {
@@ -67,12 +74,12 @@ export function LearningInsights({
         } finally {
             setIsLoading(false);
         }
-    };
+    }, [getToken, onInsightsLoaded]);
 
     useEffect(() => {
+        if (!isLoaded || !isSignedIn) return;
         fetchInsights();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    }, [isLoaded, isSignedIn, fetchInsights]);
 
     if (isLoading) {
         return (

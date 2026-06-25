@@ -74,6 +74,7 @@ export default function CourseDetailPage() {
                       }
                     : oldData,
             );
+            queryClient.invalidateQueries({ queryKey: ["my-enrolled"] });
         },
         onError: (error: unknown) => {
             const fallback =

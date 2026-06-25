@@ -52,17 +52,23 @@ const fallbackUsers: UserRecord[] = [
 ];
 
 export default function AdminUsersPage() {
-    const { data, isLoading, error, refetch } = useQuery({
+    const {
+        data = fallbackUsers,
+        isLoading,
+        error,
+        refetch,
+    } = useQuery({
         queryKey: ["admin-users"],
         queryFn: async () => {
             try {
                 const res = await api.get("/users");
-                return res.data.data as UserRecord[];
+                return (res.data?.data ?? fallbackUsers) as UserRecord[];
             } catch (err) {
                 console.error(err);
                 return fallbackUsers;
             }
         },
+        initialData: fallbackUsers,
     });
 
     return (
