@@ -16,11 +16,16 @@ async function bootstrap() {
 
     const app = express();
 
+    app.set("trust proxy", 1);
+
     app.use(
         cors({
             origin: (origin, callback) => {
                 if (!origin) return callback(null, true);
-                const allowedOrigins = [config.webUrl, "http://localhost:3000"];
+                const allowedOrigins = [
+                    ...config.webUrls,
+                    "http://localhost:3000",
+                ];
                 const isLocalhost = /^https?:\/\/localhost(:\d+)?$/.test(
                     origin,
                 );

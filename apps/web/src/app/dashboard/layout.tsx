@@ -50,7 +50,7 @@ export default function DashboardLayout({
                                     <img
                                         src={
                                             user?.imageUrl ||
-                                            "/avatar-placeholder.png"
+                                            "/avatar-placeholder.svg"
                                         }
                                         alt="Profile"
                                         className="h-8 w-8 rounded-full object-cover"

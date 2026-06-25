@@ -95,6 +95,9 @@ router.post(
     "/recommendations",
     aiRateLimiter,
     async (req: Request, res: Response) => {
+        console.log("AUTH:", (req as any).auth);
+        console.log("COOKIES:", req.headers.cookie);
+        console.log("ORIGIN:", req.headers.origin);
         try {
             const userId = (req as Request & { auth?: { userId?: string } })
                 .auth?.userId;
@@ -141,6 +144,9 @@ router.get(
     "/learning-insights",
     aiRateLimiter,
     async (req: Request, res: Response) => {
+        console.log("AUTH:", (req as any).auth);
+        console.log("COOKIES:", req.headers.cookie);
+        console.log("ORIGIN:", req.headers.origin);
         try {
             const userId = (req as Request & { auth?: { userId?: string } })
                 .auth?.userId;

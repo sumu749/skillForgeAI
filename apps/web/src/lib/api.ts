@@ -40,8 +40,11 @@ export async function streamChat(
             courseContext,
             ...(conversationId ? { conversationId } : {}),
         };
-        const response = await fetch(`${API_URL}/api/ai/chat`, {
+        const chatBaseUrl =
+            API_URL || browserApiBaseUrl || "http://localhost:4000";
+        const response = await fetch(`${chatBaseUrl}/api/ai/chat`, {
             method: "POST",
+            credentials: "include",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(payload),
         });
