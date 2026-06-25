@@ -9,7 +9,8 @@ import Link from "next/link";
 import { cn } from "@/lib/utils";
 
 interface CourseRecommendation {
-    courseId: string;
+    courseId?: string;
+    slug?: string;
     title: string;
     reason: string;
     matchScore: number;
@@ -39,22 +40,30 @@ export function SmartRecommendations({
             setRecommendations(response.data.recommendations);
             onRecommendationsLoaded?.(response.data.recommendations);
         } catch (err) {
+            setError(
+                err instanceof Error
+                    ? err.message
+                    : "Unable to load recommendations. Showing sample recommendations.",
+            );
             // Demo data fallback
             setRecommendations([
                 {
                     courseId: "1",
+                    slug: "advanced-react-patterns",
                     title: "Advanced React Patterns",
                     reason: "Builds on your React fundamentals with advanced component patterns",
                     matchScore: 0.95,
                 },
                 {
                     courseId: "2",
+                    slug: "nodejs-backend-development",
                     title: "Node.js Backend Development",
                     reason: "Perfect next step for full-stack development skills",
                     matchScore: 0.88,
                 },
                 {
                     courseId: "3",
+                    slug: "typescript-masterclass",
                     title: "TypeScript Masterclass",
                     reason: "Enhance your development workflow with type safety",
                     matchScore: 0.82,
@@ -131,7 +140,9 @@ export function SmartRecommendations({
                                     {rec.reason}
                                 </p>
                                 <div className="flex justify-end">
-                                    <Link href={`/courses/${rec.courseId}`}>
+                                    <Link
+                                        href={`/courses/${rec.slug || rec.courseId}`}
+                                    >
                                         <Button size="sm" variant="ghost">
                                             View Course
                                             <ArrowRight className="h-3 w-3 ml-1" />

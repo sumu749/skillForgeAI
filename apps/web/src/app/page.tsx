@@ -362,6 +362,51 @@ export default function HomePage() {
                 </div>
             </section>
 
+            {/* Newsletter */}
+            <section className="py-12 bg-muted/10">
+                <div className="container text-center">
+                    <h3 className="text-2xl font-semibold mb-2">
+                        Join our Newsletter
+                    </h3>
+                    <p className="text-muted-foreground mb-4">
+                        Get course updates, AI tips, and special offers
+                        delivered weekly.
+                    </p>
+                    <form
+                        onSubmit={async (e) => {
+                            e.preventDefault();
+                            const form = e.currentTarget as HTMLFormElement;
+                            const fd = new FormData(form);
+                            const email = fd.get("email");
+                            if (!email) return alert("Please enter your email");
+                            try {
+                                await fetch("/api/newsletter", {
+                                    method: "POST",
+                                    headers: {
+                                        "Content-Type": "application/json",
+                                    },
+                                    body: JSON.stringify({ email }),
+                                });
+                                alert("Thanks — check your inbox!");
+                                form.reset();
+                            } catch (err) {
+                                console.error(err);
+                                alert("Failed to subscribe");
+                            }
+                        }}
+                        className="max-w-md mx-auto flex items-center gap-2"
+                    >
+                        <input
+                            name="email"
+                            type="email"
+                            placeholder="you@domain.com"
+                            className="flex-1 rounded-md border px-3 py-2"
+                        />
+                        <Button type="submit">Subscribe</Button>
+                    </form>
+                </div>
+            </section>
+
             {/* CTA */}
             <section className="py-20">
                 <div className="container">
@@ -385,7 +430,7 @@ export default function HomePage() {
                                     <Button
                                         size="lg"
                                         variant="outline"
-                                        className="border-white/30 text-white hover:bg-white/10"
+                                        className="border-white/30 bg-transparent text-white hover:bg-white/10"
                                     >
                                         Browse Courses
                                     </Button>

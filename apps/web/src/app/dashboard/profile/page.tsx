@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
@@ -13,32 +14,104 @@ import { useUser } from "@clerk/nextjs";
 
 function ClerkProfile() {
     const { user } = useUser();
+    const [editing, setEditing] = useState(false);
+    const initialName =
+        [user?.firstName, user?.lastName].filter(Boolean).join(" ") || "";
+    const [name, setName] = useState(initialName);
+    const [saving, setSaving] = useState(false);
+
+    const onSave = async (e: React.FormEvent) => {
+        e.preventDefault();
+        if (!user) return;
+
+        const trimmedName = name.trim();
+        const [firstName, ...rest] = trimmedName.split(" ");
+        const lastName = rest.join(" ");
+
+        try {
+            setSaving(true);
+            await user.update({ firstName, lastName });
+            setEditing(false);
+        } catch (err) {
+            console.error("Failed to update user", err);
+            alert("Failed to update profile");
+        } finally {
+            setSaving(false);
+        }
+    };
+
     return (
         <>
-            <div>
-                <p className="text-sm text-muted-foreground">Name</p>
-                <p className="font-medium">{user?.fullName || "—"}</p>
-            </div>
-            <div>
-                <p className="text-sm text-muted-foreground">Email</p>
-                <p className="font-medium">
-                    {user?.primaryEmailAddress?.emailAddress || "—"}
-                </p>
-            </div>
-            <div>
-                <p className="text-sm text-muted-foreground">Role</p>
-                <p className="font-medium capitalize">
-                    {(user?.publicMetadata?.role as string) || "user"}
-                </p>
-            </div>
-            <div>
-                <p className="text-sm text-muted-foreground">Member Since</p>
-                <p className="font-medium">
-                    {user?.createdAt
-                        ? new Date(user.createdAt).toLocaleDateString()
-                        : "—"}
-                </p>
-            </div>
+            <form onSubmit={onSave} className="col-span-2">
+                <div className="mb-4">
+                    <label className="text-sm text-muted-foreground">
+                        Name
+                    </label>
+                    {editing ? (
+                        <div className="flex gap-2 mt-1">
+                            <input
+                                className="input"
+                                value={name}
+                                onChange={(e) => setName(e.target.value)}
+                            />
+                            <button
+                                type="submit"
+                                className="btn btn-primary"
+                                disabled={saving}
+                            >
+                                {saving ? "Saving..." : "Save"}
+                            </button>
+                            <button
+                                type="button"
+                                className="btn"
+                                onClick={() => {
+                                    setEditing(false);
+                                    setName(user?.fullName || "");
+                                }}
+                            >
+                                Cancel
+                            </button>
+                        </div>
+                    ) : (
+                        <div className="flex items-center justify-between mt-1">
+                            <p className="font-medium">
+                                {user?.fullName || "—"}
+                            </p>
+                            <button
+                                type="button"
+                                className="btn btn-link"
+                                onClick={() => setEditing(true)}
+                            >
+                                Edit
+                            </button>
+                        </div>
+                    )}
+                </div>
+                <div className="grid sm:grid-cols-2 gap-4">
+                    <div>
+                        <p className="text-sm text-muted-foreground">Email</p>
+                        <p className="font-medium">
+                            {user?.primaryEmailAddress?.emailAddress || "—"}
+                        </p>
+                    </div>
+                    <div>
+                        <p className="text-sm text-muted-foreground">Role</p>
+                        <p className="font-medium capitalize">
+                            {(user?.publicMetadata?.role as string) || "user"}
+                        </p>
+                    </div>
+                    <div>
+                        <p className="text-sm text-muted-foreground">
+                            Member Since
+                        </p>
+                        <p className="font-medium">
+                            {user?.createdAt
+                                ? new Date(user.createdAt).toLocaleDateString()
+                                : "—"}
+                        </p>
+                    </div>
+                </div>
+            </form>
         </>
     );
 }

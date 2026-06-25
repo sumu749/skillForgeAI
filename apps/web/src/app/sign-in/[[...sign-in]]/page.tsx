@@ -48,11 +48,9 @@ export default function SignInPage() {
                     Sign in to continue your learning journey
                 </p>
             </div>
-            {process.env.NODE_ENV === "development" && (
-                <Button variant="outline" className="mb-4" onClick={fillDemo}>
-                    Fill Demo Credentials (Dev)
-                </Button>
-            )}
+            <Button variant="outline" className="mb-4" onClick={fillDemo}>
+                Fill Demo Credentials
+            </Button>
             <SignIn
                 redirectUrl="/dashboard"
                 appearance={{

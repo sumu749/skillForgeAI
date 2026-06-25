@@ -146,7 +146,15 @@ export async function streamChat(
         await saveInteraction(conversationId, allMessages, userId);
         onDone(conversationId);
     } catch (error) {
-        onError((error as Error).message || "Failed to generate response");
+        const errMsg = (error as Error).message || "";
+        if (errMsg.includes("429") || errMsg.toLowerCase().includes("quota")) {
+            const fallback =
+                "I'm currently unavailable due to API limits. Please try again later or contact the admin to top up the OpenAI credits.";
+            onChunk(fallback);
+            onDone(conversationId);
+        } else {
+            onError(errMsg || "Failed to generate response");
+        }
     }
 }
 

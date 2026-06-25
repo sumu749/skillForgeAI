@@ -37,6 +37,11 @@ export function LearningInsights({
             setInsights(response.data);
             onInsightsLoaded?.(response.data);
         } catch (err) {
+            setError(
+                err instanceof Error
+                    ? err.message
+                    : "Failed to load learning insights. Showing sample insights.",
+            );
             // Demo data fallback
             setInsights({
                 progressSummary:

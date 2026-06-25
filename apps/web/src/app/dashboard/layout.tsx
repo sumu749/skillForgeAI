@@ -3,7 +3,8 @@
 import { useState } from "react";
 import { isClerkEnabled } from "@/lib/clerk-config";
 import { DashboardSidebar } from "@/components/dashboard/sidebar";
-import { useUser } from "@clerk/nextjs";
+import { useUser, useClerk } from "@clerk/nextjs";
+import Link from "next/link";
 import { Menu } from "lucide-react";
 
 export default function DashboardLayout({
@@ -13,6 +14,7 @@ export default function DashboardLayout({
 }) {
     const [mobileOpen, setMobileOpen] = useState(false);
     const { user } = useUser();
+    const clerk = useClerk();
     const isAdmin = user?.publicMetadata?.role === "admin";
     const isManager = user?.publicMetadata?.role === "manager";
 
@@ -36,6 +38,42 @@ export default function DashboardLayout({
                 />
             )}
             <div className="flex-1 p-6 lg:p-8">
+                <header className="mb-4 flex items-center justify-between">
+                    <div />
+                    <div className="flex items-center gap-4">
+                        <div className="hidden sm:block text-sm text-muted-foreground">
+                            {user?.fullName}
+                        </div>
+                        <div className="relative">
+                            <details className="relative">
+                                <summary className="flex items-center gap-2 cursor-pointer">
+                                    <img
+                                        src={
+                                            user?.imageUrl ||
+                                            "/avatar-placeholder.png"
+                                        }
+                                        alt="Profile"
+                                        className="h-8 w-8 rounded-full object-cover"
+                                    />
+                                </summary>
+                                <div className="absolute right-0 mt-2 w-48 rounded-md border bg-background p-2 shadow">
+                                    <Link
+                                        href="/dashboard/profile"
+                                        className="block px-2 py-1 text-sm hover:bg-accent/10 rounded"
+                                    >
+                                        Profile
+                                    </Link>
+                                    <button
+                                        onClick={() => clerk.signOut()}
+                                        className="w-full text-left px-2 py-1 text-sm hover:bg-accent/10 rounded"
+                                    >
+                                        Logout
+                                    </button>
+                                </div>
+                            </details>
+                        </div>
+                    </div>
+                </header>
                 <div className="mb-4 flex items-center justify-between lg:hidden">
                     <button
                         type="button"

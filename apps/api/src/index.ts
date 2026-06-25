@@ -8,6 +8,7 @@ import { apiRateLimiter } from "./middleware/rateLimit";
 import { optionalAuth } from "./middleware/auth";
 import coursesRouter from "./routes/courses";
 import aiRouter from "./routes/ai";
+import usersRouter from "./routes/users";
 
 async function bootstrap() {
     const storageMode = await connectDatabase();
@@ -59,6 +60,7 @@ async function bootstrap() {
 
     app.use("/api/courses", coursesRouter);
     app.use("/api/ai", aiRouter);
+    app.use("/api/users", usersRouter);
 
     app.use((_req, res) => {
         res.status(404).json({ error: "Not found" });
