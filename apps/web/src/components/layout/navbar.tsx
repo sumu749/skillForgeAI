@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ChevronDown, Menu, Sparkles, X } from "lucide-react";
+import { ChevronDown, Menu, Sparkles, X, BookOpen, HelpCircle, FileText, Info, User } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/theme-toggle";
@@ -32,16 +32,19 @@ const dropdownSections = [
                 href: "/explore",
                 label: "Explore courses",
                 description: "Browse all AI learning paths",
+                icon: BookOpen,
             },
             {
                 href: "/dashboard/chat",
                 label: "AI Tutor",
                 description: "Get guided help and study support",
+                icon: Sparkles,
             },
             {
                 href: "/dashboard/profile",
                 label: "Your profile",
                 description: "Manage your account and progress",
+                icon: User,
             },
         ],
     },
@@ -52,16 +55,19 @@ const dropdownSections = [
                 href: "/help",
                 label: "Help center",
                 description: "Find answers and support articles",
+                icon: HelpCircle,
             },
             {
                 href: "/blog",
                 label: "Blog",
                 description: "Read the latest AI training tips",
+                icon: FileText,
             },
             {
                 href: "/about",
                 label: "About SkillForge",
                 description: "Learn what makes our platform special",
+                icon: Info,
             },
         ],
     },
@@ -69,6 +75,7 @@ const dropdownSections = [
 
 export function Navbar() {
     const pathname = usePathname();
+    const [scrolled, setScrolled] = useState(false);
     const [mobileOpen, setMobileOpen] = useState(false);
     const [menuOpen, setMenuOpen] = useState(false);
     const menuRef = useRef<HTMLDivElement | null>(null);
@@ -98,6 +105,10 @@ export function Navbar() {
         : null;
 
     useEffect(() => {
+        const onScroll = () => setScrolled(window.scrollY > 8);
+        onScroll();
+        window.addEventListener("scroll", onScroll, { passive: true });
+
         if (!menuOpen) {
             return;
         }
@@ -127,14 +138,20 @@ export function Navbar() {
     }, [menuOpen]);
 
     return (
-        <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 py-2">
-            <div className="mx-auto flex w-full max-w-[1400px] items-center justify-between px-6 py-2">
-                <Link
-                    href="/"
-                    className="flex items-center gap-2 font-bold text-xl"
-                >
-                    <Sparkles className="h-6 w-6 text-primary" />
-                    <span>SkillForge AI</span>
+        <header
+            className={cn(
+                "sticky top-0 z-50 w-full transition-all duration-300 ease-smooth",
+                scrolled
+                    ? "border-b bg-background/80 backdrop-blur-lg shadow-sm py-1.5"
+                    : "border-b border-transparent bg-background/40 backdrop-blur-sm py-3",
+            )}
+        >
+            <div className="mx-auto flex w-full max-w-[1400px] items-center justify-between px-6">
+                <Link href="/" className="group flex items-center gap-2.5 font-bold text-xl">
+                    <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-primary to-secondary shadow-md transition-transform duration-300 ease-smooth group-hover:scale-105 group-hover:rotate-3">
+                        <Sparkles className="h-4.5 w-4.5 text-white" strokeWidth={2.25} />
+                    </span>
+                    <span className="tracking-tight">SkillForge AI</span>
                 </Link>
 
                 <nav className="hidden md:flex items-center gap-6">
