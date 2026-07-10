@@ -2,7 +2,17 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ChevronDown, Menu, Sparkles, X, BookOpen, HelpCircle, FileText, Info, User } from "lucide-react";
+import {
+    ChevronDown,
+    Menu,
+    Sparkles,
+    X,
+    BookOpen,
+    HelpCircle,
+    FileText,
+    Info,
+    User,
+} from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/theme-toggle";
@@ -147,9 +157,15 @@ export function Navbar() {
             )}
         >
             <div className="mx-auto flex w-full max-w-[1400px] items-center justify-between px-6">
-                <Link href="/" className="group flex items-center gap-2.5 font-bold text-xl">
+                <Link
+                    href="/"
+                    className="group flex items-center gap-2.5 font-bold text-xl"
+                >
                     <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-primary to-secondary shadow-md transition-transform duration-300 ease-smooth group-hover:scale-105 group-hover:rotate-3">
-                        <Sparkles className="h-4.5 w-4.5 text-white" strokeWidth={2.25} />
+                        <Sparkles
+                            className="h-4.5 w-4.5 text-white"
+                            strokeWidth={2.25}
+                        />
                     </span>
                     <span className="tracking-tight">SkillForge AI</span>
                 </Link>
@@ -170,52 +186,66 @@ export function Navbar() {
                                 </button>
 
                                 {menuOpen && (
-                                    <div className="absolute left-0 top-full z-50 mt-2 w-[28rem] overflow-hidden rounded-3xl border border-border bg-background p-4 shadow-xl">
+                                    <div className="absolute left-0 top-full z-50 mt-3 w-[30rem] overflow-hidden rounded-2xl border border-border bg-card p-5 shadow-xl animate-in-up">
                                         <div className="grid gap-6 lg:grid-cols-2">
                                             {dropdownSections.map((section) => (
                                                 <div key={section.title}>
-                                                    <p className="text-xs font-semibold uppercase tracking-[0.24em] text-muted-foreground">
+                                                    <p className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground/80">
                                                         {section.title}
                                                     </p>
-                                                    <div className="mt-3 space-y-2">
+                                                    <div className="mt-3 space-y-1">
                                                         {section.items.map(
-                                                            (item) => (
-                                                                <Link
-                                                                    key={
-                                                                        item.href
-                                                                    }
-                                                                    href={
-                                                                        item.href
-                                                                    }
-                                                                    onClick={() =>
-                                                                        setMenuOpen(
-                                                                            false,
-                                                                        )
-                                                                    }
-                                                                    className="block rounded-2xl px-3 py-2 transition-colors hover:bg-muted"
-                                                                >
-                                                                    <p className="font-medium">
-                                                                        {
-                                                                            item.label
+                                                            (item) => {
+                                                                const Icon = (
+                                                                    item as any
+                                                                ).icon;
+                                                                return (
+                                                                    <Link
+                                                                        key={
+                                                                            item.href
                                                                         }
-                                                                    </p>
-                                                                    <p className="text-sm text-muted-foreground">
-                                                                        {
-                                                                            item.description
+                                                                        href={
+                                                                            item.href
                                                                         }
-                                                                    </p>
-                                                                </Link>
-                                                            ),
+                                                                        onClick={() =>
+                                                                            setMenuOpen(
+                                                                                false,
+                                                                            )
+                                                                        }
+                                                                        className="group flex items-start gap-3 rounded-xl px-3 py-2.5 transition-colors hover:bg-primary/5"
+                                                                    >
+                                                                        <span className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-muted text-muted-foreground transition-colors group-hover:bg-primary/10 group-hover:text-primary">
+                                                                            {Icon ? (
+                                                                                <Icon className="h-4 w-4" />
+                                                                            ) : (
+                                                                                <Sparkles className="h-4 w-4" />
+                                                                            )}
+                                                                        </span>
+                                                                        <span>
+                                                                            <span className="block text-sm font-medium leading-tight group-hover:text-primary transition-colors">
+                                                                                {
+                                                                                    item.label
+                                                                                }
+                                                                            </span>
+                                                                            <span className="block text-xs text-muted-foreground mt-0.5">
+                                                                                {
+                                                                                    item.description
+                                                                                }
+                                                                            </span>
+                                                                        </span>
+                                                                    </Link>
+                                                                );
+                                                            },
                                                         )}
                                                     </div>
                                                 </div>
                                             ))}
                                         </div>
-                                        <div className="mt-4 rounded-2xl bg-secondary/5 p-4">
+                                        <div className="mt-4 rounded-xl bg-gradient-to-br from-secondary/10 to-secondary/5 p-4 border border-secondary/10">
                                             <p className="text-sm font-semibold">
                                                 New learner?
                                             </p>
-                                            <p className="text-sm text-muted-foreground">
+                                            <p className="text-sm text-muted-foreground mt-0.5">
                                                 Create an account to save
                                                 progress and access your
                                                 personalized dashboard.
@@ -225,9 +255,9 @@ export function Navbar() {
                                                 onClick={() =>
                                                     setMenuOpen(false)
                                                 }
-                                                className="mt-3 inline-flex items-center text-sm font-medium text-primary hover:underline"
+                                                className="mt-2 inline-flex items-center text-sm font-medium text-primary hover:underline"
                                             >
-                                                Start for free
+                                                Start for free →
                                             </Link>
                                         </div>
                                     </div>

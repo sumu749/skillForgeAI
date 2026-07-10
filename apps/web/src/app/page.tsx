@@ -66,49 +66,93 @@ export default function HomePage() {
             {/* Hero - 60-70vh */}
             <section className="relative min-h-[65vh] flex items-center overflow-hidden">
                 <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-background to-secondary/10" />
+                <div className="absolute inset-0 bg-mesh opacity-60 pointer-events-none" />
                 <div className="container relative py-20">
-                    <div className="max-w-3xl">
-                        <span className="inline-flex items-center gap-2 rounded-full bg-primary/10 px-4 py-1.5 text-sm font-medium text-primary mb-6">
-                            <Sparkles className="h-4 w-4" />
-                            AI-Powered Learning Platform
-                        </span>
-                        <h1 className="text-4xl md:text-6xl font-bold tracking-tight mb-6">
-                            {heroSlides[activeSlide].title} with{" "}
-                            <span className="text-primary">SkillForge AI</span>
-                        </h1>
-                        <p className="text-lg text-muted-foreground mb-8 max-w-2xl">
-                            {heroSlides[activeSlide].description}
-                        </p>
-                        <div className="flex flex-wrap gap-4">
-                            <Link href="/explore">
-                                <Button size="lg" className="group">
-                                    Explore Courses
-                                    <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
-                                </Button>
-                            </Link>
-                            <Link href="/dashboard/chat">
-                                <Button size="lg" variant="secondary">
-                                    <Sparkles className="mr-2 h-4 w-4" />
-                                    Try AI Tutor
-                                </Button>
-                            </Link>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+                        <div className="max-w-3xl">
+                            <span className="inline-flex items-center gap-2 rounded-full bg-primary/10 px-4 py-1.5 text-sm font-medium text-primary mb-6">
+                                <Sparkles className="h-4 w-4" />
+                                AI-Powered Learning Platform
+                            </span>
+                            <h1 className="text-4xl md:text-6xl font-bold tracking-tight mb-6">
+                                {heroSlides[activeSlide].title} with{" "}
+                                <span className="text-gradient">
+                                    SkillForge AI
+                                </span>
+                            </h1>
+                            <p className="text-lg text-muted-foreground mb-8 max-w-2xl">
+                                {heroSlides[activeSlide].description}
+                            </p>
+                            <div className="flex flex-wrap gap-4">
+                                <Link href="/explore">
+                                    <Button
+                                        size="lg"
+                                        className="group shadow-glow"
+                                    >
+                                        Explore Courses
+                                        <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+                                    </Button>
+                                </Link>
+                                <Link href="/dashboard/chat">
+                                    <Button size="lg" variant="secondary">
+                                        <Sparkles className="mr-2 h-4 w-4" />
+                                        Try AI Tutor
+                                    </Button>
+                                </Link>
+                            </div>
+                            <div className="mt-8 flex flex-wrap gap-3 text-sm">
+                                {heroSlides.map((slide, index) => (
+                                    <button
+                                        key={slide.title}
+                                        type="button"
+                                        onClick={() => setActiveSlide(index)}
+                                        className={cn(
+                                            "rounded-full border px-4 py-2 transition",
+                                            index === activeSlide
+                                                ? "border-primary bg-primary/10 text-primary"
+                                                : "border-border bg-background text-muted-foreground hover:border-primary hover:text-primary",
+                                        )}
+                                    >
+                                        {slide.title}
+                                    </button>
+                                ))}
+                            </div>
                         </div>
-                        <div className="mt-8 flex flex-wrap gap-3 text-sm">
-                            {heroSlides.map((slide, index) => (
-                                <button
-                                    key={slide.title}
-                                    type="button"
-                                    onClick={() => setActiveSlide(index)}
-                                    className={cn(
-                                        "rounded-full border px-4 py-2 transition",
-                                        index === activeSlide
-                                            ? "border-primary bg-primary/10 text-primary"
-                                            : "border-border bg-background text-muted-foreground hover:border-primary hover:text-primary",
-                                    )}
-                                >
-                                    {slide.title}
-                                </button>
-                            ))}
+
+                        {/* Right-side hero mockup */}
+                        <div className="hidden md:block">
+                            <Card className="p-6 shadow-elevation-lg rounded-2xl">
+                                <div className="space-y-4">
+                                    <div className="h-3 w-24 rounded-full bg-muted" />
+                                    <div className="rounded-xl bg-card p-4">
+                                        <div className="flex items-start gap-3">
+                                            <div className="h-9 w-9 rounded-full bg-primary text-primary-foreground flex items-center justify-center font-semibold">
+                                                AI
+                                            </div>
+                                            <div>
+                                                <div className="text-sm font-medium">
+                                                    AI Tutor
+                                                </div>
+                                                <div className="text-xs text-muted-foreground">
+                                                    Ask anything about this
+                                                    course
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div className="mt-4 space-y-3">
+                                            <div className="rounded-lg bg-muted p-3 text-sm">
+                                                How do I set up Tailwind with
+                                                Next.js?
+                                            </div>
+                                            <div className="rounded-lg bg-primary/10 p-3 text-sm">
+                                                Use the official Tailwind docs
+                                                and configure your content
+                                                paths.
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </Card>
                         </div>
                     </div>
                 </div>
