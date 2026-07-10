@@ -24,9 +24,11 @@ export function Footer() {
                     <div className="space-y-4">
                         <Link
                             href="/"
-                            className="flex items-center gap-2 font-bold text-lg"
+                            className="group flex items-center gap-2.5 font-bold text-lg"
                         >
-                            <Sparkles className="h-5 w-5 text-primary" />
+                            <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-primary to-secondary shadow-md transition-transform duration-300 ease-smooth group-hover:scale-105 group-hover:rotate-3">
+                                <Sparkles className="h-4.5 w-4.5 text-white" />
+                            </span>
                             SkillForge AI
                         </Link>
                         <p className="text-sm text-muted-foreground">

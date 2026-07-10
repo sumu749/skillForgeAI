@@ -164,9 +164,9 @@ export default function HomePage() {
                                         </div>
                                         <div className="rounded-xl rounded-tr-sm bg-primary/10 px-3.5 py-2.5 text-sm max-w-[85%] leading-relaxed">
                                             Server Components fetch data
-                                            directly on the server — no client
-                                            JS shipped. Here&apos;s a pattern
-                                            used in the Next.js course...
+                                            directly on the server, no client JS
+                                            shipped. Here&apos;s a pattern used
+                                            in the Next.js course...
                                         </div>
                                     </div>
                                     <div className="flex items-center gap-2 pl-10">
