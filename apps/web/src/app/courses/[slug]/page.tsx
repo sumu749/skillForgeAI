@@ -124,18 +124,18 @@ export default function CourseDetailPage() {
                     </div>
 
                     <div>
-                        <div className="flex gap-2 mb-3">
-                            <span className="rounded-full bg-primary/10 px-3 py-1 text-xs font-medium text-primary">
+                        <div className="flex flex-wrap gap-2 mb-3">
+                            <span className="rounded-full border border-primary/20 bg-primary/10 px-3 py-1 text-xs font-semibold text-primary shadow-sm">
                                 {CATEGORY_LABELS[course.category]}
                             </span>
-                            <span className="rounded-full bg-secondary/10 px-3 py-1 text-xs font-medium text-secondary">
+                            <span className="rounded-full border border-secondary/20 bg-secondary/10 px-3 py-1 text-xs font-semibold text-secondary shadow-sm">
                                 {LEVEL_LABELS[course.level]}
                             </span>
                         </div>
-                        <h1 className="text-3xl font-bold mb-4">
+                        <h1 className="text-3xl md:text-4xl font-bold tracking-tight mb-4">
                             {course.title}
                         </h1>
-                        <p className="text-muted-foreground">
+                        <p className="text-muted-foreground leading-relaxed">
                             {course.longDescription}
                         </p>
                     </div>
@@ -167,10 +167,13 @@ export default function CourseDetailPage() {
                             {course.modules.map((mod, i) => (
                                 <div
                                     key={mod.title}
-                                    className="flex justify-between border-b pb-3 last:border-0"
+                                    className="flex items-center gap-4 py-3 border-b last:border-0"
                                 >
-                                    <span className="font-medium">
-                                        {i + 1}. {mod.title}
+                                    <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-sm font-semibold text-primary">
+                                        {i + 1}
+                                    </span>
+                                    <span className="font-medium flex-1">
+                                        {mod.title}
                                     </span>
                                     <span className="text-sm text-muted-foreground">
                                         {mod.lessons} lessons
@@ -221,68 +224,83 @@ export default function CourseDetailPage() {
                 </div>
 
                 <div className="space-y-6">
-                    <Card className="p-6 sticky top-20">
-                        <div className="text-3xl font-bold text-primary mb-4">
-                            {formatPrice(course.price)}
-                        </div>
-                        <div className="space-y-3 text-sm mb-6">
-                            <div className="flex items-center gap-2">
-                                <Star className="h-4 w-4 fill-accent text-accent" />
-                                {formatRating(course.rating)} (
-                                {course.reviewCount} reviews)
+                    <Card className="sticky top-20 overflow-hidden shadow-lg">
+                        <div className="h-1.5 bg-gradient-to-r from-primary to-secondary" />
+                        <div className="p-6">
+                            <div className="text-3xl font-bold text-primary mb-4">
+                                {formatPrice(course.price)}
                             </div>
-                            <div className="flex items-center gap-2">
-                                <Clock className="h-4 w-4" />
-                                {course.durationHours} hours
-                            </div>
-                            <div className="flex items-center gap-2">
-                                <BookOpen className="h-4 w-4" />
-                                {course.modules.reduce(
-                                    (s, m) => s + m.lessons,
-                                    0,
-                                )}{" "}
-                                lessons
-                            </div>
-                            {course.specs.certificate && (
-                                <div className="flex items-center gap-2">
-                                    <Award className="h-4 w-4" />
-                                    Certificate of completion
+                            <div className="space-y-3 text-sm mb-6">
+                                <div className="flex items-center gap-2.5">
+                                    <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-accent/10">
+                                        <Star className="h-3.5 w-3.5 fill-accent text-accent" />
+                                    </span>
+                                    {formatRating(course.rating)} (
+                                    {course.reviewCount} reviews)
                                 </div>
-                            )}
+                                <div className="flex items-center gap-2.5">
+                                    <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-primary/10">
+                                        <Clock className="h-3.5 w-3.5 text-primary" />
+                                    </span>
+                                    {course.durationHours} hours
+                                </div>
+                                <div className="flex items-center gap-2.5">
+                                    <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-secondary/10">
+                                        <BookOpen className="h-3.5 w-3.5 text-secondary" />
+                                    </span>
+                                    {course.modules.reduce(
+                                        (s, m) => s + m.lessons,
+                                        0,
+                                    )}{" "}
+                                    lessons
+                                </div>
+                                {course.specs.certificate && (
+                                    <div className="flex items-center gap-2.5">
+                                        <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-accent/10">
+                                            <Award className="h-3.5 w-3.5 text-accent" />
+                                        </span>
+                                        Certificate of completion
+                                    </div>
+                                )}
+                            </div>
+                            <Button
+                                className="w-full mb-2 shadow-glow"
+                                size="lg"
+                                onClick={() => {
+                                    setMessage(null);
+                                    if (!isSignedIn) {
+                                        router.push(
+                                            `/sign-in?redirect_url=/courses/${slug}`,
+                                        );
+                                        return;
+                                    }
+                                    enrollMutation.mutate();
+                                }}
+                                disabled={enrollMutation.isPending || enrolled}
+                            >
+                                {enrollMutation.isPending
+                                    ? "Enrolling..."
+                                    : enrolled
+                                      ? "Already Enrolled"
+                                      : "Enroll Now"}
+                            </Button>
+                            {message ? (
+                                <p className="text-sm text-center text-secondary font-medium">
+                                    {message}
+                                </p>
+                            ) : null}
+                            {enrolled ? (
+                                <p className="text-sm text-center text-muted-foreground">
+                                    You are enrolled in this course.
+                                </p>
+                            ) : null}
+                            <p className="text-xs text-muted-foreground text-center mt-3 pt-3 border-t">
+                                Instructor:{" "}
+                                <span className="font-medium text-foreground">
+                                    {course.instructor}
+                                </span>
+                            </p>
                         </div>
-                        <Button
-                            className="w-full mb-2"
-                            onClick={() => {
-                                setMessage(null);
-                                if (!isSignedIn) {
-                                    router.push(
-                                        `/sign-in?redirect_url=/courses/${slug}`,
-                                    );
-                                    return;
-                                }
-                                enrollMutation.mutate();
-                            }}
-                            disabled={enrollMutation.isPending || enrolled}
-                        >
-                            {enrollMutation.isPending
-                                ? "Enrolling..."
-                                : enrolled
-                                  ? "Already Enrolled"
-                                  : "Enroll Now"}
-                        </Button>
-                        {message ? (
-                            <p className="text-sm text-center text-secondary">
-                                {message}
-                            </p>
-                        ) : null}
-                        {enrolled ? (
-                            <p className="text-sm text-center text-muted-foreground">
-                                You are enrolled in this course.
-                            </p>
-                        ) : null}
-                        <p className="text-xs text-muted-foreground text-center">
-                            Instructor: {course.instructor}
-                        </p>
                     </Card>
 
                     <ChatAssistant
