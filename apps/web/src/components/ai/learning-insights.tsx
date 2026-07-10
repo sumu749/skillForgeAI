@@ -4,6 +4,7 @@ import { useEffect, useState, useCallback } from "react";
 import { Loader2, Brain, TrendingUp, CheckCircle2 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
 import { api } from "@/lib/api";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@clerk/nextjs";
@@ -19,6 +20,25 @@ interface LearningInsight {
 interface LearningInsightsProps {
     className?: string;
     onInsightsLoaded?: (insights: LearningInsight) => void;
+}
+
+function InsightsSkeleton() {
+    return (
+        <div className="space-y-6">
+            <Skeleton className="h-16 w-full rounded-lg" />
+            <div className="space-y-2">
+                <Skeleton className="h-4 w-32" />
+                <Skeleton className="h-3.5 w-full" />
+                <Skeleton className="h-3.5 w-4/5" />
+            </div>
+            <div className="space-y-2">
+                <Skeleton className="h-4 w-28" />
+                <Skeleton className="h-3.5 w-full" />
+                <Skeleton className="h-3.5 w-3/5" />
+                <Skeleton className="h-3.5 w-4/5" />
+            </div>
+        </div>
+    );
 }
 
 export function LearningInsights({
@@ -90,8 +110,8 @@ export function LearningInsights({
                         Learning Insights
                     </CardTitle>
                 </CardHeader>
-                <CardContent className="flex items-center justify-center py-8">
-                    <Loader2 className="h-5 w-5 animate-spin" />
+                <CardContent>
+                    <InsightsSkeleton />
                 </CardContent>
             </Card>
         );

@@ -4,6 +4,7 @@ import { useEffect, useState, useCallback } from "react";
 import { Loader2, Lightbulb, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
 import { api } from "@/lib/api";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
@@ -20,6 +21,22 @@ interface CourseRecommendation {
 interface RecommendationsProps {
     onRecommendationsLoaded?: (recommendations: CourseRecommendation[]) => void;
     className?: string;
+}
+
+function RecommendationSkeleton() {
+    return (
+        <div className="p-4 border border-border rounded-xl space-y-3">
+            <div className="flex items-start justify-between gap-3">
+                <Skeleton className="h-4 w-2/3" />
+                <Skeleton className="h-4 w-10" />
+            </div>
+            <Skeleton className="h-3.5 w-full" />
+            <Skeleton className="h-3.5 w-4/5" />
+            <div className="flex justify-end">
+                <Skeleton className="h-7 w-24 rounded-md" />
+            </div>
+        </div>
+    );
 }
 
 export function SmartRecommendations({
@@ -101,8 +118,12 @@ export function SmartRecommendations({
                         AI Recommendations
                     </CardTitle>
                 </CardHeader>
-                <CardContent className="flex items-center justify-center py-8">
-                    <Loader2 className="h-5 w-5 animate-spin" />
+                <CardContent>
+                    <div className="space-y-3">
+                        <RecommendationSkeleton />
+                        <RecommendationSkeleton />
+                        <RecommendationSkeleton />
+                    </div>
                 </CardContent>
             </Card>
         );
@@ -127,11 +148,22 @@ export function SmartRecommendations({
                 )}
 
                 {recommendations.length === 0 ? (
-                    <div className="text-center py-8">
-                        <p className="text-muted-foreground">
-                            Enroll in a course to get personalized
-                            recommendations
+                    <div className="flex flex-col items-center text-center py-10 px-4">
+                        <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-primary/5 mb-4">
+                            <Lightbulb className="h-6 w-6 text-primary" />
+                        </div>
+                        <p className="text-lg font-semibold mb-1">
+                            No recommendations yet
                         </p>
+                        <p className="text-sm text-muted-foreground max-w-xs">
+                            Enroll in a course and we&apos;ll surface
+                            personalized next steps for you here.
+                        </p>
+                        <Link href="/explore" className="mt-4">
+                            <Button size="sm" variant="secondary">
+                                Browse Courses
+                            </Button>
+                        </Link>
                     </div>
                 ) : (
                     <div className="space-y-3">
