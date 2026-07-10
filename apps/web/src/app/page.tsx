@@ -12,6 +12,9 @@ import {
     TrendingUp,
     CheckCircle,
     Star,
+    Bot,
+    MessageSquare,
+    Zap,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -63,24 +66,28 @@ export default function HomePage() {
 
     return (
         <>
-            {/* Hero - 60-70vh */}
-            <section className="relative min-h-[65vh] flex items-center overflow-hidden">
-                <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-background to-secondary/10" />
-                <div className="absolute inset-0 bg-mesh opacity-60 pointer-events-none" />
-                <div className="container relative py-20">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-                        <div className="max-w-3xl">
-                            <span className="inline-flex items-center gap-2 rounded-full bg-primary/10 px-4 py-1.5 text-sm font-medium text-primary mb-6">
-                                <Sparkles className="h-4 w-4" />
+            {/* Hero */}
+            <section className="relative overflow-hidden">
+                <div className="absolute inset-0 bg-mesh" />
+                <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-background" />
+                <div className="container relative py-20 lg:py-28">
+                    <div className="grid lg:grid-cols-[1.1fr_0.9fr] gap-16 items-center">
+                        {/* Left: copy */}
+                        <div className="max-w-2xl animate-in-up">
+                            <span className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-4 py-1.5 text-sm font-medium text-primary mb-6">
+                                <span className="relative flex h-2 w-2">
+                                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75" />
+                                    <span className="relative inline-flex h-2 w-2 rounded-full bg-primary" />
+                                </span>
                                 AI-Powered Learning Platform
                             </span>
-                            <h1 className="text-4xl md:text-6xl font-bold tracking-tight mb-6">
+                            <h1 className="text-4xl md:text-6xl font-bold tracking-tight mb-6 min-h-[1px]">
                                 {heroSlides[activeSlide].title} with{" "}
                                 <span className="text-gradient">
                                     SkillForge AI
                                 </span>
                             </h1>
-                            <p className="text-lg text-muted-foreground mb-8 max-w-2xl">
+                            <p className="text-lg text-muted-foreground mb-8 max-w-xl leading-relaxed">
                                 {heroSlides[activeSlide].description}
                             </p>
                             <div className="flex flex-wrap gap-4">
@@ -94,7 +101,11 @@ export default function HomePage() {
                                     </Button>
                                 </Link>
                                 <Link href="/dashboard/chat">
-                                    <Button size="lg" variant="secondary">
+                                    <Button
+                                        size="lg"
+                                        variant="secondary"
+                                        className="shadow-sm"
+                                    >
                                         <Sparkles className="mr-2 h-4 w-4" />
                                         Try AI Tutor
                                     </Button>
@@ -107,10 +118,10 @@ export default function HomePage() {
                                         type="button"
                                         onClick={() => setActiveSlide(index)}
                                         className={cn(
-                                            "rounded-full border px-4 py-2 transition",
+                                            "rounded-full border px-4 py-2 transition-all duration-200",
                                             index === activeSlide
-                                                ? "border-primary bg-primary/10 text-primary"
-                                                : "border-border bg-background text-muted-foreground hover:border-primary hover:text-primary",
+                                                ? "border-primary bg-primary/10 text-primary shadow-sm"
+                                                : "border-border bg-background/60 text-muted-foreground hover:border-primary/40 hover:text-primary",
                                         )}
                                     >
                                         {slide.title}
@@ -119,40 +130,91 @@ export default function HomePage() {
                             </div>
                         </div>
 
-                        {/* Right-side hero mockup */}
-                        <div className="hidden md:block">
-                            <Card className="p-6 shadow-elevation-lg rounded-2xl">
-                                <div className="space-y-4">
-                                    <div className="h-3 w-24 rounded-full bg-muted" />
-                                    <div className="rounded-xl bg-card p-4">
-                                        <div className="flex items-start gap-3">
-                                            <div className="h-9 w-9 rounded-full bg-primary text-primary-foreground flex items-center justify-center font-semibold">
-                                                AI
-                                            </div>
-                                            <div>
-                                                <div className="text-sm font-medium">
-                                                    AI Tutor
-                                                </div>
-                                                <div className="text-xs text-muted-foreground">
-                                                    Ask anything about this
-                                                    course
-                                                </div>
-                                            </div>
+                        {/* Right: product preview mockup */}
+                        <div
+                            className="relative hidden lg:block animate-in-up"
+                            style={{ animationDelay: "120ms" }}
+                        >
+                            <div className="relative rounded-2xl border border-border bg-card shadow-xl overflow-hidden">
+                                <div className="flex items-center gap-1.5 border-b border-border bg-muted/40 px-4 py-3">
+                                    <span className="h-2.5 w-2.5 rounded-full bg-destructive/60" />
+                                    <span className="h-2.5 w-2.5 rounded-full bg-accent/60" />
+                                    <span className="h-2.5 w-2.5 rounded-full bg-secondary/60" />
+                                    <span className="ml-3 text-xs text-muted-foreground font-mono">
+                                        skillforge.ai/dashboard/chat
+                                    </span>
+                                </div>
+                                <div className="p-5 space-y-4">
+                                    <div className="flex items-center gap-2 text-sm font-semibold">
+                                        <Bot className="h-4 w-4 text-primary" />
+                                        SkillForge AI Tutor
+                                    </div>
+                                    <div className="flex gap-3">
+                                        <div className="h-7 w-7 shrink-0 rounded-full bg-muted flex items-center justify-center">
+                                            <MessageSquare className="h-3.5 w-3.5" />
                                         </div>
-                                        <div className="mt-4 space-y-3">
-                                            <div className="rounded-lg bg-muted p-3 text-sm">
-                                                How do I set up Tailwind with
-                                                Next.js?
-                                            </div>
-                                            <div className="rounded-lg bg-primary/10 p-3 text-sm">
-                                                Use the official Tailwind docs
-                                                and configure your content
-                                                paths.
-                                            </div>
+                                        <div className="rounded-xl rounded-tl-sm bg-muted px-3.5 py-2.5 text-sm max-w-[85%]">
+                                            How do I structure a React Server
+                                            Component?
                                         </div>
                                     </div>
+                                    <div className="flex gap-3 flex-row-reverse">
+                                        <div className="h-7 w-7 shrink-0 rounded-full bg-primary flex items-center justify-center">
+                                            <Sparkles className="h-3.5 w-3.5 text-primary-foreground" />
+                                        </div>
+                                        <div className="rounded-xl rounded-tr-sm bg-primary/10 px-3.5 py-2.5 text-sm max-w-[85%] leading-relaxed">
+                                            Server Components fetch data
+                                            directly on the server — no client
+                                            JS shipped. Here&apos;s a pattern
+                                            used in the Next.js course...
+                                        </div>
+                                    </div>
+                                    <div className="flex items-center gap-2 pl-10">
+                                        <span className="h-1.5 w-1.5 rounded-full bg-primary/60 animate-pulse" />
+                                        <span className="h-1.5 w-1.5 rounded-full bg-primary/60 animate-pulse [animation-delay:150ms]" />
+                                        <span className="h-1.5 w-1.5 rounded-full bg-primary/60 animate-pulse [animation-delay:300ms]" />
+                                    </div>
                                 </div>
-                            </Card>
+                            </div>
+
+                            {/* Floating stat chips */}
+                            <div
+                                className="absolute -left-6 top-10 rounded-xl border border-border bg-card px-4 py-3 shadow-lg animate-in-up"
+                                style={{ animationDelay: "260ms" }}
+                            >
+                                <div className="flex items-center gap-2">
+                                    <div className="h-8 w-8 rounded-lg bg-secondary/10 flex items-center justify-center">
+                                        <TrendingUp className="h-4 w-4 text-secondary" />
+                                    </div>
+                                    <div>
+                                        <p className="text-xs text-muted-foreground">
+                                            Avg. Rating
+                                        </p>
+                                        <p className="text-sm font-bold">
+                                            4.7 / 5
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div
+                                className="absolute -right-4 -bottom-6 rounded-xl border border-border bg-card px-4 py-3 shadow-lg animate-in-up"
+                                style={{ animationDelay: "380ms" }}
+                            >
+                                <div className="flex items-center gap-2">
+                                    <div className="h-8 w-8 rounded-lg bg-accent/10 flex items-center justify-center">
+                                        <Zap className="h-4 w-4 text-accent" />
+                                    </div>
+                                    <div>
+                                        <p className="text-xs text-muted-foreground">
+                                            Instant Answers
+                                        </p>
+                                        <p className="text-sm font-bold">
+                                            &lt; 2s response
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
