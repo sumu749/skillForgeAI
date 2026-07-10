@@ -169,6 +169,10 @@ curl -X POST http://localhost:4000/ai/generate-content \
 
 ## Demo Credentials
 
+- Admin username: `hablu749`
+- Admin password: `@@hablu749@@`
+- User username: `user749`
+- User password: `@@user749@@`
 - Email: `demo@skillforge.ai`
 - Password: `DemoPass123!`
 
