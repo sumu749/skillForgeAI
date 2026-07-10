@@ -10,11 +10,29 @@ import "./globals.css";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-    title: "SkillForge AI — Learn Smarter with AI",
+    metadataBase: new URL("https://skillforge.ai"),
+    title: {
+        default: "SkillForge AI — Learn Smarter with AI",
+        template: "%s · SkillForge AI",
+    },
     description:
         "AI-powered online learning platform with expert courses and an intelligent tutor.",
     icons: {
         icon: "/favicon.ico",
+    },
+    openGraph: {
+        title: "SkillForge AI — Learn Smarter with AI",
+        description:
+            "AI-powered online learning platform with expert courses and an intelligent tutor.",
+        siteName: "SkillForge AI",
+        type: "website",
+        locale: "en_US",
+    },
+    twitter: {
+        card: "summary_large_image",
+        title: "SkillForge AI — Learn Smarter with AI",
+        description:
+            "AI-powered online learning platform with expert courses and an intelligent tutor.",
     },
 };
 
