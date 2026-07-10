@@ -1,5 +1,6 @@
 "use client";
 
+import React, { useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import {
     BarChart,
@@ -37,6 +38,15 @@ const COLORS = [
 export default function DashboardPage() {
     const router = useRouter();
     const { user, isLoaded } = useUser();
+    // Redirect students (non-admin, non-manager) away from the overview page
+    // to the courses page — the overview is not available to student role.
+    useEffect(() => {
+        if (!isLoaded) return;
+        const role = (user?.publicMetadata?.role as string) || "student";
+        if (role === "student") {
+            router.replace("/dashboard/courses");
+        }
+    }, [isLoaded, user, router]);
     const { data: stats } = useQuery({
         queryKey: ["dashboard-stats"],
         queryFn: async () => {
