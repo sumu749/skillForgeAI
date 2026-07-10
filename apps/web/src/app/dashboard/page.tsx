@@ -18,6 +18,7 @@ import {
     Legend,
 } from "recharts";
 import { BookOpen, Users, Star, TrendingUp, Sparkles } from "lucide-react";
+import { StatCard } from "@/components/dashboard/stat-card";
 import { useRouter } from "next/navigation";
 import { useUser } from "@clerk/nextjs";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -128,44 +129,30 @@ export default function DashboardPage() {
             </Link>
 
             <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                {[
-                    {
-                        icon: BookOpen,
-                        label: "Total Courses",
-                        value: stats?.totalCourses ?? "—",
-                    },
-                    {
-                        icon: Users,
-                        label: "Students",
-                        value: stats?.totalStudents?.toLocaleString() ?? "—",
-                    },
-                    {
-                        icon: Star,
-                        label: "Avg Rating",
-                        value: stats?.avgRating?.toFixed(1) ?? "—",
-                    },
-                    {
-                        icon: TrendingUp,
-                        label: "Reviews",
-                        value: stats?.totalReviews ?? "—",
-                    },
-                ].map((item) => (
-                    <Card key={item.label}>
-                        <CardContent className="p-6 flex items-center gap-4">
-                            <div className="h-12 w-12 rounded-xl bg-primary/10 flex items-center justify-center">
-                                <item.icon className="h-6 w-6 text-primary" />
-                            </div>
-                            <div>
-                                <p className="text-sm text-muted-foreground">
-                                    {item.label}
-                                </p>
-                                <p className="text-2xl font-bold">
-                                    {item.value}
-                                </p>
-                            </div>
-                        </CardContent>
-                    </Card>
-                ))}
+                <StatCard
+                    icon={BookOpen}
+                    label="Total Courses"
+                    value={stats?.totalCourses}
+                    accent="primary"
+                />
+                <StatCard
+                    icon={Users}
+                    label="Students"
+                    value={stats?.totalStudents?.toLocaleString()}
+                    accent="secondary"
+                />
+                <StatCard
+                    icon={Star}
+                    label="Avg Rating"
+                    value={stats?.avgRating?.toFixed(1)}
+                    accent="accent"
+                />
+                <StatCard
+                    icon={TrendingUp}
+                    label="Reviews"
+                    value={stats?.totalReviews}
+                    accent="primary"
+                />
             </div>
 
             <div className="grid lg:grid-cols-2 gap-6 mb-8">
