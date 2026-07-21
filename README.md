@@ -47,7 +47,6 @@ SkillForge AI exposes an intelligent chat tutor experience that helps users with
 - The backend reads `OPENAI_API_KEY` and `OPENAI_MODEL` from environment variables.
 - The chat feature is available through the dashboard UI when users are signed in.
 
-Note: This repository is deployed publicly at the Live demo link above. Do NOT commit API keys or secret values to the repository. If you find secrets in the repository, rotate them immediately.
 
 ## Setup Instructions
 
@@ -110,8 +109,6 @@ Update the following values in the copied files:
     - `NEXT_PUBLIC_CLERK_SIGN_UP_URL` (default: `/sign-up`)
     - `NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL` (default: `/dashboard`)
     - `NEXT_PUBLIC_CLERK_AFTER_SIGN_UP_URL` (default: `/dashboard`)
-
-Security: Keep these files out of version control. Add `apps/api/.env` and `apps/web/.env.local` to `.gitignore` if not already ignored.
 
 ### 4. Run development servers
 
@@ -212,12 +209,6 @@ Contributions welcome — open an issue or PR. Please:
 
 - Avoid committing secrets.
 - Add minimal, focused PRs with a clear description and testing steps.
-
-## License & Contact
-
-This project does not currently include a license file. Add a `LICENSE` file if you intend to open-source it.
-
-For questions or to report a problem, open an issue or contact the maintainers.
 
 ## Directory Layout
 
